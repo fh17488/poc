@@ -2,7 +2,7 @@
 
 ## Summary
 
-The current PoC project aims to develop a working node backend based on a given set of business conditions
+The current PoC project aims to develop a working node backend based on a given set of business conditions.
 
 ## Entities
 
