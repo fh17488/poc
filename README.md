@@ -1,74 +1,62 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Backend - PoC
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Summary
 
-## Description
+The current PoC project aims to develop a working node backend based on a given set of business conditions
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Entities
 
-## Installation
+users, groups, collections and items
 
-```bash
-$ npm install
-```
+Users can belong to multiple groups or be a global manager
+A group can link to multiple collections
+A collection can belong to a single group
+Items belong to a single collection
 
-## Running the app
+A global manager can:
+- CRUD all roles users
+- CRUD all groups, collections and items
 
-```bash
-# development
-$ npm run start
+A group manager can:
+- CRUD regular and manager roles only under current group
+- CRUD collections and items only under current group
 
-# watch mode
-$ npm run start:dev
+## Schemas
 
-# production mode
-$ npm run start:prod
-```
+RoleSchema = {
+  role: String, // valid: 'regular', 'manager', 'globalManager'
+  groupId: String, // for globalManager groupId is null
+};
 
-## Test
+UserSchema = {
+  email: String,
+  roles: ArrayOf(RoleSchema),
+};
 
-```bash
-# unit tests
-$ npm run test
+GroupSchema = {
+  name: String,
+  collectionIds: ArrayOf(String),
+};
 
-# e2e tests
-$ npm run test:e2e
+CollectionSchema = {
+  name: String,
+};
 
-# test coverage
-$ npm run test:cov
-```
+ItemSchema = {
+  name: String,
+  parentId: String, /// collection id
+}
 
-## Support
+## Requirements:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Build CRUD API for all 4 entities
+All-access, filtering and relation logic should be implemented as an Authorization layer by way of middlewares 
+The authorization layer should be generic
+Use absolute paths
+Patterns: modules, services, dependency injection, multi-tier architecture
+(Optional) Whenever a user gets updated an email should be sent to him (this should be in service)
+(Optional) Must run in serverless (serverless.framework) with offline and warmup plugins
+(Optional) When an email is changed both old and new emails should get notified
 
 ## License
 
