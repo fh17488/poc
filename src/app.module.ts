@@ -7,10 +7,13 @@ import { GroupsModule } from './groups/groups.module';
 import { RolesModule } from './roles/roles.module';
 import { CollectionsModule } from './collections/collections.module';
 import { ItemsModule } from './items/items.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfig } from './config/typeorm.config';
 
 
 @Module({
-  imports: [UsersModule, GroupsModule, RolesModule, CollectionsModule, ItemsModule],
+  imports: [ TypeOrmModule.forRoot(typeOrmConfig), 
+    UsersModule, GroupsModule, RolesModule, CollectionsModule, ItemsModule],
   controllers: [AppController, UsersController],
   providers: [AppService],
 })
