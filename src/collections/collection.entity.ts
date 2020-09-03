@@ -1,5 +1,6 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { Item } from '../items/item.entity';
+import { Group } from 'src/groups/group.entity';
 
 @Entity()
 export class Collection extends BaseEntity {
@@ -12,4 +13,7 @@ export class Collection extends BaseEntity {
   @OneToMany(type => Item, item => item.collection, { eager: false })
   items: Item[];
   
+  @ManyToOne(type => Group, group => group.collections, { eager: true })
+  group: Group;
+
 }
