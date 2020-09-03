@@ -30,4 +30,22 @@ export class ItemsService {
         return item;
     }
 
+    async updateItemName(id: number, name: string): Promise<Item> {
+        const item = await this.getItemById(id);        
+        item.name = name;        
+        await item.save();
+        return item;
+    }
+
+    async deleteItem(id: number): Promise<string> {        
+        const successMessage = `Item with Id ${id} successfully deleted.`;
+        try {
+            const item: Item = await this.getItemById(id);
+            await item.remove();
+            return successMessage;
+        }
+        catch(error) {
+            throw new NotFoundException(`Item with ID "${id}" not found`);
+        }        
+    }
 }
