@@ -2,7 +2,6 @@ import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch, BadRequestExce
 import { GroupsService } from './groups.service';
 import { CollectionsService } from 'src/collections/collections.service';
 import { Group } from './group.entity';
-import { GroupInputValidationPipe } from './group.validation';
 import { Collection } from 'src/collections/collection.entity';
 
 @Controller('groups')
