@@ -7,6 +7,7 @@ import { CollectionRepository } from './collection.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([CollectionRepository])],
   controllers: [CollectionsController],
-  providers: [CollectionsService]
+  providers: [CollectionsService],
+  exports: [CollectionsService]
 })
 export class CollectionsModule {}

@@ -9,7 +9,7 @@ export class Collection extends BaseEntity {
   @Column()
   name: string;
 
-  @OneToMany(type => Item, item => item.parentId, { eager: false })
+  @OneToMany(type => Item, item => item.collection, { eager: false })
   items: Item[];
   
 }
