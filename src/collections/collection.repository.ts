@@ -30,7 +30,7 @@ export class CollectionRepository extends Repository<Collection> {
      return collections;
  }
 
-  async createCollection( name: string ): Promise<Collection> {
+ async createCollection( name: string ): Promise<Collection> {
     
     const collection = new Collection();
     collection.name = name;
