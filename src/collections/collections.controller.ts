@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, ParseIntPipe, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, ParseIntPipe, Param, Patch, Delete } from '@nestjs/common';
 import { CollectionsService } from './collections.service';
 import { Collection } from './collection.entity';
 
@@ -27,5 +27,10 @@ export class CollectionsController {
     @Post()    
     createCollection( @Body('name') name: string): Promise<Collection> {
         return this.collectionsService.createCollection(name);
+    }
+
+    @Delete('/:id')
+    deleteCollection(@Param('id', ParseIntPipe) id: number): Promise<string> {
+        return this.collectionsService.deleteCollection(id);
     }
 }

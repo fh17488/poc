@@ -37,5 +37,13 @@ export class CollectionsService {
         return this.collectionRepository.createCollection(name);
     }
 
-
+    async deleteCollection(id: number): Promise<string> {        
+        const successMessage = `Collection with Id ${id} successfully deleted.`;
+        const collection: Collection = await this.getCollectionById(id);
+        if(!collection){
+            throw new NotFoundException(`Collection with Id ${id} not found.`);
+        }
+        await collection.remove();
+        return successMessage;
+    }
 }
