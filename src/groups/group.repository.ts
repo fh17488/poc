@@ -4,27 +4,32 @@ import { Group } from './group.entity';
 @EntityRepository(Group)
 export class GroupRepository extends Repository<Group> {
 
-//  async getItems(): Promise<Item[]> {
-//      const items: Item[] = await this.find();   
-//      items.forEach(item => {
-//          delete item.collection;
-//      });  
-//      return items;
-//  }
+    async getGroups(): Promise<Group[]> {
+        const groups: Group[] = await this.find();
+        groups.forEach(group => {
+            delete group.collections;
+        });
 
-//  async getItemById(id: number): Promise<Item> {
-//     const item = await this.findOne({ where: { id } });
-//     delete item.collection;
-//     return item;
-//  }
+        return groups;
+    }
 
-//  async createItem( collection: Collection, name: string ): Promise<Item> {   
+     async getGroupById(id: number): Promise<Group> {
+        const group = await this.findOne({ where: { id } });
+        if(group.collections){
+            group.collections.forEach(collection => {
+                delete collection.group;
+                delete collection.items;
+            }); 
+        }
+        return group;
+     }
 
-//     const item = new Item();        
-//     item.collection = collection;
-//     item.name = name;    
-//     await item.save();
-//     delete item.collection;
-//     return item;
-//   }
+    async createGroup(name: string): Promise<Group> {
+
+        const group = new Group();
+        group.name = name;
+        await group.save();
+        delete group.collections;
+        return group;
+    }
 }

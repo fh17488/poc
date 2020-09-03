@@ -33,6 +33,14 @@ export class CollectionsService {
         return collection;
     }
 
+    async checkIsGroupAssigned(id: number): Promise<boolean> {
+        const collection = await this.collectionRepository.findOne({ where: { id } });        
+        if(!collection.group)
+            return false;
+        else 
+            return true;
+    }
+
     async createCollection(name: string): Promise<Collection> {
         return this.collectionRepository.createCollection(name);
     }
