@@ -1,5 +1,4 @@
 import { Controller, Post, Body, ParseIntPipe, Get, Param, Patch, Delete } from '@nestjs/common';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { ItemsService } from './items.service';
 import { CollectionsService } from 'src/collections/collections.service';
 import { Item } from './item.entity';

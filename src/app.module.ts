@@ -14,7 +14,7 @@ import { typeOrmConfig } from './config/typeorm.config';
 @Module({
   imports: [ TypeOrmModule.forRoot(typeOrmConfig), 
     UsersModule, GroupsModule, RolesModule, CollectionsModule, ItemsModule],
-  controllers: [AppController, UsersController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
