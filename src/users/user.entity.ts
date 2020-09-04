@@ -1,11 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Group } from 'src/groups/group.entity';
+import { UserToGroup } from '../userToGroup/userToGroup.entity';
 
-export enum UserRole {
-  GLOBAL_MANAGER = "globalManager",
-  GROUP_MANAGER = "manager",
-  REGULAR = "regular"
-}
 
 @Entity()
 export class User extends BaseEntity {
@@ -15,14 +10,8 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Column({
-    type: "enum",
-    enum: UserRole,
-    default: UserRole.REGULAR
-  })
-  role: UserRole;
+  @OneToMany(type => UserToGroup, userToGroup => userToGroup.user)
+  public userToGroups!: UserToGroup[];
 
-  @OneToMany(type => Group, group => group.users, { eager: true })
-  group: Group[];
 
 }

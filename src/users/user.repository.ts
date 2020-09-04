@@ -4,27 +4,31 @@ import { User } from './user.entity';
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
 
-//  async getItems(): Promise<Item[]> {
-//      const items: Item[] = await this.find();   
-//      items.forEach(item => {
-//          delete item.collection;
-//      });  
-//      return items;
-//  }
+    async getUsers(): Promise<User[]> {
+        const users: User[] = await this.find();
+        users.forEach(user => {
+            delete user.userToGroups;
+        });
 
-//  async getItemById(id: number): Promise<Item> {
-//     const item = await this.findOne({ where: { id } });
-//     delete item.collection;
-//     return item;
-//  }
+        return users;
+    }
 
-//  async createItem( collection: Collection, name: string ): Promise<Item> {   
+    async getUserById(id: number): Promise<User> {
+        const user = await this.findOne({
+            where: { id },
+            relations: ["userToGroups"]
+        });
+        return user;
+    }
 
-//     const item = new Item();        
-//     item.collection = collection;
-//     item.name = name;    
-//     await item.save();
-//     delete item.collection;
-//     return item;
-//   }
+    async createUser(email: string): Promise<User> {
+
+        const user = new User();
+        user.email = email;
+        await user.save();
+        delete user.userToGroups;
+        return user;
+    }
+
+  
 }

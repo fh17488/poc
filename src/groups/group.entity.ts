@@ -1,6 +1,6 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Collection } from '../collections/collection.entity';
-import { User } from 'src/users/user.entity';
+import { UserToGroup } from 'src/userToGroup/userToGroup.entity';
 
 @Entity()
 export class Group extends BaseEntity {
@@ -13,7 +13,7 @@ export class Group extends BaseEntity {
   @OneToMany(type => Collection, collection => collection.group, { eager: false })
   collections: Collection[];
 
-  @ManyToOne(type => User, user => user.group, { eager: false })
-  users: User[];
- 
+  @OneToMany(type => UserToGroup, userToGroup => userToGroup.group)
+  public userToGroups!: UserToGroup[];
+
 }
