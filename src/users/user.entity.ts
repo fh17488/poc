@@ -11,7 +11,7 @@ export class User extends BaseEntity {
   email: string;
 
   @OneToMany(type => UserToGroup, userToGroup => userToGroup.user)
-  public userToGroups!: UserToGroup[];
+  public roles!: UserToGroup[];
 
 
 }

@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './user.entity';
+import { UserToGroup } from 'src/userToGroup/userToGroup.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -7,7 +8,7 @@ export class UserRepository extends Repository<User> {
     async getUsers(): Promise<User[]> {
         const users: User[] = await this.find();
         users.forEach(user => {
-            delete user.userToGroups;
+            delete user.roles;
         });
 
         return users;
@@ -16,8 +17,15 @@ export class UserRepository extends Repository<User> {
     async getUserById(id: number): Promise<User> {
         const user = await this.findOne({
             where: { id },
-            relations: ["userToGroups"]
+            relations: ["roles"]
         });
+        const roles: UserToGroup[] = user.roles;        
+        if(roles){
+            roles.forEach(role => {
+                delete role.userToGroupId;
+                delete role.userId;
+            });
+        }
         return user;
     }
 
@@ -26,7 +34,7 @@ export class UserRepository extends Repository<User> {
         const user = new User();
         user.email = email;
         await user.save();
-        delete user.userToGroups;
+        delete user.roles;
         return user;
     }
 

@@ -26,7 +26,7 @@ export class UserToGroup extends BaseEntity {
       })
       role: UserRole;
 
-    @ManyToOne(type => User, user => user.userToGroups)
+    @ManyToOne(type => User, user => user.roles)
     public user!: User;
 
     @ManyToOne(type => Group, group => group.userToGroups)

@@ -32,10 +32,14 @@ export class UsersService {
 
     async updateUserRoles(id: number, createUserDtos: CreateUserDto[], groups: Group[]): Promise<User> {
         let user = await this.userRepository.getUserById(id);
-        delete user.userToGroups;
-        for(let i=0; i<createUserDtos.length; i++){
-            await this.userToGroupRepository.createUserToGroup(user, groups[i], createUserDtos[i].role);            
+        const roles: UserToGroup[] = await this.userToGroupRepository.find({ where: { userId: id } })
+        for (let i = 0; i < roles.length; i++) {
+            await roles[i].remove();
         }        
+        delete user.roles;
+        for (let i = 0; i < createUserDtos.length; i++) {
+            await this.userToGroupRepository.createUserToGroup(user, groups[i], createUserDtos[i].role);
+        }
         await user.save();
         user = await this.userRepository.getUserById(id);
         return user;
@@ -44,19 +48,19 @@ export class UsersService {
     async createUser(email: string): Promise<User> {
         return this.userRepository.createUser(email);
     }
-
+    
     async deleteUser(id: number): Promise<string> {
         const successMessage = `User with Id ${id} successfully deleted.`;
         try {
             const user: User = await this.userRepository.getUserById(id);
-            const userToGroups: UserToGroup[] = await this.userToGroupRepository.find({ where: { userId: id } })
-            for(let i=0; i<userToGroups.length; i++){
-                await userToGroups[i].remove();
+            const roles: UserToGroup[] = await this.userToGroupRepository.find({ where: { userId: id } })
+            for (let i = 0; i < roles.length; i++) {
+                await roles[i].remove();
             }
             await user.remove();
             return successMessage;
         }
-        catch (error) {            
+        catch (error) {
             throw new NotFoundException(`User with Id ${id} not found.`);
         }
     }
