@@ -4,7 +4,6 @@ import { GroupsService } from 'src/groups/groups.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Group } from 'src/groups/group.entity';
-import { QueryFailedError } from 'typeorm/error/QueryFailedError';
 
 @Controller('users')
 export class UsersController {
