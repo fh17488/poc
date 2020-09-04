@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch, BadRequestException, Delete } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CollectionsService } from 'src/collections/collections.service';
 import { Group } from './group.entity';
@@ -78,5 +78,10 @@ export class GroupsController {
     @Post()
     createGroup(@Body('name') name: string): Promise<Group> {
         return this.groupsService.createGroup(name);
+    }
+
+    @Delete('/:id')
+    deleteGroup(@Param('id', ParseIntPipe) id: number): Promise<string> {
+        return this.groupsService.deleteGroup(id);
     }
 }
