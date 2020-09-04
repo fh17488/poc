@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { RolesService } from 'src/roles/roles.service';
+import { GroupsService } from 'src/groups/groups.service';
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService, private rolesService: RolesService){}
+    constructor(private usersService: UsersService, private groupsService: GroupsService){}
 }

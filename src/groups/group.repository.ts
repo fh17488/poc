@@ -24,7 +24,7 @@ export class GroupRepository extends Repository<Group> {
             }); 
         }
         return group;
-     }
+     }     
 
     async createGroup(name: string): Promise<Group> {
 
