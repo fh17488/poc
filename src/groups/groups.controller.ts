@@ -26,27 +26,53 @@ export class GroupsController {
         return this.groupsService.updateGroupName(id, name);
     }
 
-    @Patch('/:id/collections')
-    async updateGroupCollections(
+    @Patch('/:id/collections/link')
+    async linkGroupToCollections(
         @Param('id', ParseIntPipe) id: number,
         @Body('collections') Ids: string
     ): Promise<Group> {
         
             const collectionIds: number[] = Ids.split(',').map((value) => parseInt(value));
             const collections: Collection[] = [];
-            for(let i=0; i<collectionIds.length; i++){
-                if(!await this.collectionsService.checkIsGroupAssigned(collectionIds[i]))
+            let otherGroupId: number;
+            for(let i=0; i<collectionIds.length; i++){                
                 collections.push(await this.collectionsService.getCollectionById(collectionIds[i]));    
             }
-            if(collections.length!=collectionIds.length)
-            {
-                collectionIds.forEach(collectionId => {
-                    if(!collections.find(collection => collectionId===collection.id))
-                        throw new BadRequestException(`Collection with Id ${collectionId} is already assigned to a group.`);
-                });
-                
+            
+            collectionIds.forEach(collectionId => {
+                if(collections.find(collection => {
+                    if(collection.group){
+                        otherGroupId = collection.group.id;                    
+                        return collectionId===collection.id && collection.group.id!==id;
+                    }
+                    return false;                     
+                }))
+                    throw new BadRequestException(`Collection with Id ${collectionId} is already assigned to the group with Id ${otherGroupId}.`);
+            });                
+            
+            return this.groupsService.linkGroupToCollections(id, collections);
+    }
+
+    @Patch('/:id/collections/unlink')
+    async unlinkGroupFromCollections(
+        @Param('id', ParseIntPipe) id: number,
+        @Body('collections') Ids: string
+    ): Promise<Group> {
+        
+            const collectionIds: number[] = Ids.split(',').map((value) => parseInt(value));
+            const collections: Collection[] = [];            
+            for(let i=0; i<collectionIds.length; i++){                
+                collections.push(await this.collectionsService.getCollectionById(collectionIds[i]));    
             }
-            return this.groupsService.updateGroupCollections(id, collections);
+            
+            collectionIds.forEach(collectionId => {
+                if(!collections.find(collection => {                    
+                    return collectionId===collection.id && collection.group && collection.group.id===id;
+                }))
+                    throw new BadRequestException(`Collection with Id ${collectionId} is not assigned to this group.`);
+            });                
+            
+            return this.groupsService.unlinkGroupFromCollections(id, collections);
     }
 
     @Post()

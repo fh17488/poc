@@ -14,7 +14,9 @@ export class GroupRepository extends Repository<Group> {
     }
 
      async getGroupById(id: number): Promise<Group> {
-        const group = await this.findOne({ where: { id } });
+        const group = await this.findOne({ where: { id } ,
+             relations: ["collections"] });
+        
         if(group.collections){
             group.collections.forEach(collection => {
                 delete collection.group;

@@ -32,7 +32,7 @@ export class GroupsService {
         return group;
     }
 
-    async updateGroupCollections(id: number, collections: Collection[]): Promise<Group> {
+    async linkGroupToCollections(id: number, collections: Collection[]): Promise<Group> {
         let group = await this.getGroupById(id); 
         if(!group.collections)       
             group.collections = collections;
@@ -40,6 +40,22 @@ export class GroupsService {
             for(let i = 0; i < collections.length; i++){
                 group.collections.push(collections[i]);
             }
+        }
+        await group.save();        
+        group = await this.getGroupById(id);
+        return group;
+    }
+
+    async unlinkGroupFromCollections(id: number, collections: Collection[]): Promise<Group> {
+        let group = await this.groupRepository.getGroupById(id);         
+        let altCollections: Collection[];
+        if(group.collections) {
+            console.log(group.collections, 'group.collections');
+            altCollections = group.collections.filter(collection =>
+                 collections.find(
+                     collectionToUnlink => 
+                     collectionToUnlink.id!==collection.id))
+            group.collections = altCollections;
         }
         await group.save();        
         group = await this.getGroupById(id);
