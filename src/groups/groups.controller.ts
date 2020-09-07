@@ -3,6 +3,7 @@ import { GroupsService } from './groups.service';
 import { CollectionsService } from 'src/collections/collections.service';
 import { Group } from './group.entity';
 import { Collection } from 'src/collections/collection.entity';
+import { Roles } from 'src/users/roles.decorator';
 
 @Controller('groups')
 export class GroupsController {
@@ -18,7 +19,7 @@ export class GroupsController {
         return this.groupsService.getGroupById(id);
     }
 
-    @Patch('/:id/name')
+    @Patch('/:id/name')    
     updateGroupName(
         @Param('id', ParseIntPipe) id: number,
         @Body('name') name: string
@@ -27,6 +28,7 @@ export class GroupsController {
     }
 
     @Patch('/:id/collections/link')
+    @Roles('manager')
     async linkGroupToCollections(
         @Param('id', ParseIntPipe) id: number,
         @Body('collections') Ids: string
@@ -54,6 +56,7 @@ export class GroupsController {
     }
 
     @Patch('/:id/collections/unlink')
+    @Roles('manager')
     async unlinkGroupFromCollections(
         @Param('id', ParseIntPipe) id: number,
         @Body('collections') Ids: string

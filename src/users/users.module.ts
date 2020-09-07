@@ -7,12 +7,16 @@ import { GroupsModule } from 'src/groups/groups.module';
 import { UserToGroupRepository } from 'src/userToGroup/userToGroup.repository';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.middleware';
+import { ItemsModule } from 'src/items/items.module';
+import { CollectionsModule } from 'src/collections/collections.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserRepository]),
     TypeOrmModule.forFeature([UserToGroupRepository]),
-    GroupsModule],
+    GroupsModule,
+    CollectionsModule,
+    ItemsModule],
   controllers: [UsersController],
   providers: [UsersService,
     {

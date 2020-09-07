@@ -11,6 +11,7 @@ import { CollectionsModule } from 'src/collections/collections.module';
     TypeOrmModule.forFeature([ItemRepository]),    
   ],
   controllers: [ItemsController],
-  providers: [ItemsService]
+  providers: [ItemsService],
+  exports: [ItemsService]
 })
 export class ItemsModule {}

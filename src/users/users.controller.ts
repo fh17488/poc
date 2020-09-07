@@ -4,10 +4,14 @@ import { GroupsService } from 'src/groups/groups.service';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Group } from 'src/groups/group.entity';
+import { Roles } from './roles.decorator';
+import { CollectionsService } from 'src/collections/collections.service';
+import { ItemsService } from 'src/items/items.service';
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService, private groupsService: GroupsService) { }
+    constructor(private usersService: UsersService, private groupsService: GroupsService, 
+        private collectionsService: CollectionsService, private itemsService: ItemsService) { }
 
     @Get()
     getUsers(): Promise<User[]> {
@@ -20,6 +24,7 @@ export class UsersController {
     }
 
     @Patch('/:id/roles')
+    @Roles('manager')
     async updateUserRoles(@Param('id', ParseIntPipe) id: number,
         @Body('roles', new ParseArrayPipe({
             optional: true,
@@ -31,19 +36,26 @@ export class UsersController {
             if (user) {
                 const groups: Group[] = [];
                 for (let i = 0; i < createUserDtos.length; i++) {
-                    groups.push(await this.groupsService.getGroupById(createUserDtos[i].groupId));
+                    try{
+                        groups.push(await this.groupsService.getGroupById(createUserDtos[i].groupId));
+                    }
+                    catch(error){                        
+                        throw new NotFoundException(`Group with Id ${createUserDtos[i].groupId} not found.`);
+                    }
                 }
                 return this.usersService.updateUserRoles(id, createUserDtos, groups);
             }
         }
-        catch (error) {
-            // console.log(error);
-            throw new NotFoundException(`User with Id ${id} not found.`);
+        catch (error) {                        
+            if(!error.response)
+                throw new NotFoundException(`User with Id ${id} not found.`);
+            else 
+                throw new NotFoundException(error.response.message);
         }
     }
     
     @Post()
-    createGroup(@Body('email') email: string): Promise<User> {
+    createGroup(@Body('email') email: string): Promise<User> {        
         return this.usersService.createUser(email);
     }
 

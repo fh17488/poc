@@ -15,7 +15,7 @@ export class ItemRepository extends Repository<Item> {
 
  async getItemById(id: number): Promise<Item> {
     const item = await this.findOne({ where: { id } });
-    delete item.collection;
+    delete item.collection.group;
     return item;
  }
 
