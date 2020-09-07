@@ -27,19 +27,19 @@ export class AuthGuard implements CanActivate {
     //GlobalManager
     if (user.roles.length === 0)
       return Promise.resolve(true);
-    else if (allowedRoles.length > 0) {            
+    else if (allowedRoles.length > 0) {
       if (request.url.search("collections") !== -1) {
         if (method.search("POST") == -1) {
           const params = request.params;
           const id = params.id;
-          return this.isCollectionOperationPermitted(id, user.roles, allowedRoles);  
+          return this.isCollectionOperationPermitted(id, user.roles, allowedRoles);
         }
       }
       else if (request.url.search("items") !== -1) {
         if (method.search("POST") == -1) {
           const params = request.params;
           const id = params.id;
-          return this.isItemOperationPermitted(id, user.roles, allowedRoles);          
+          return this.isItemOperationPermitted(id, user.roles, allowedRoles);
         }
       }
       return Promise.resolve(false);
@@ -59,8 +59,13 @@ export class AuthGuard implements CanActivate {
     return Promise.resolve(false);
   }
 
-  async isItemOperationPermitted(itemId: number, userRoles: any[], allowedRoles: string[]): Promise<boolean> {    
-    const item: Item = await this.itemsService.getItemById(itemId);
-    return this.isCollectionOperationPermitted(item.collection.id, userRoles, allowedRoles);
+  async isItemOperationPermitted(itemId: number, userRoles: any[], allowedRoles: string[]): Promise<boolean> {
+    try {
+      const item: Item  = await this.itemsService.getItemById(itemId);
+      return this.isCollectionOperationPermitted(item.collection.id, userRoles, allowedRoles);
+    }
+    catch(error){              
+      return Promise.resolve(true);
+    }      
   }
 }
