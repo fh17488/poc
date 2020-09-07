@@ -5,13 +5,11 @@ import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Group } from 'src/groups/group.entity';
 import { Roles } from './roles.decorator';
-import { CollectionsService } from 'src/collections/collections.service';
-import { ItemsService } from 'src/items/items.service';
+
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService, private groupsService: GroupsService, 
-        private collectionsService: CollectionsService, private itemsService: ItemsService) { }
+    constructor(private usersService: UsersService, private groupsService: GroupsService) { }
 
     @Get()
     getUsers(): Promise<User[]> {
