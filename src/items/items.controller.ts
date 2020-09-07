@@ -15,8 +15,7 @@ export class ItemsController {
 
     @Get('/:id')
     @Roles('manager')
-    async getItemById(@Param('id', ParseIntPipe) id: number): Promise<Item> {
-        console.log(id);
+    async getItemById(@Param('id', ParseIntPipe) id: number): Promise<Item> {        
         return this.itemsService.getItemById(id);
     }
 

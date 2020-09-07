@@ -5,7 +5,6 @@ import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { CollectionsService } from 'src/collections/collections.service';
 import { ItemsService } from 'src/items/items.service';
-import { PATH_METADATA } from '@nestjs/common/constants';
 import { Collection } from 'src/collections/collection.entity';
 import { Item } from 'src/items/item.entity';
 
