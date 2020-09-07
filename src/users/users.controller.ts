@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch, ParseArrayPipe, Delete, NotFoundException, HttpException, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, ParseIntPipe, Patch, ParseArrayPipe, Delete, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { GroupsService } from 'src/groups/groups.service';
 import { User } from './user.entity';
