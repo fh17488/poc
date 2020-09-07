@@ -27,39 +27,40 @@ export class AuthGuard implements CanActivate {
     //GlobalManager
     if (user.roles.length === 0)
       return Promise.resolve(true);
-    else if (allowedRoles.length > 0) {
-      //Get group ID associated with the handler
-      let groupId: number;
+    else if (allowedRoles.length > 0) {            
       if (request.url.search("collections") !== -1) {
         if (method.search("POST") == -1) {
           const params = request.params;
           const id = params.id;
-          const collection: Collection = await this.collectionsService.getCollectionById(id);
-          if (collection.group) {
-            groupId = collection.group.id;
-            if (user.roles.find(role => role.groupId === groupId &&
-              allowedRoles.find(allowedRole => allowedRole === role.role))) {
-              return Promise.resolve(true);
-            }
-          }
+          return this.isCollectionOperationPermitted(id, user.roles, allowedRoles);  
         }
       }
       else if (request.url.search("items") !== -1) {
         if (method.search("POST") == -1) {
           const params = request.params;
           const id = params.id;
-          const item: Item = await this.itemsService.getItemById(id);
-          const collection: Collection = await this.collectionsService.getCollectionById(item.collection.id);
-          if (collection.group) {
-            groupId = collection.group.id;
-            if (user.roles.find(role => role.groupId === groupId &&
-              allowedRoles.find(allowedRole => allowedRole === role.role))) {
-              return Promise.resolve(true);
-            }
-          }
+          return this.isItemOperationPermitted(id, user.roles, allowedRoles);          
         }
       }
       return Promise.resolve(false);
     }
+  }
+
+  async isCollectionOperationPermitted(collectionId: number, userRoles: any[], allowedRoles: string[]): Promise<boolean> {
+    let groupId: number;
+    const collection: Collection = await this.collectionsService.getCollectionById(collectionId);
+    if (collection.group) {
+      groupId = collection.group.id;
+      if (userRoles.find(role => role.groupId === groupId &&
+        allowedRoles.find(allowedRole => allowedRole === role.role))) {
+        return Promise.resolve(true);
+      }
+    }
+    return Promise.resolve(false);
+  }
+
+  async isItemOperationPermitted(itemId: number, userRoles: any[], allowedRoles: string[]): Promise<boolean> {    
+    const item: Item = await this.itemsService.getItemById(itemId);
+    return this.isCollectionOperationPermitted(item.collection.id, userRoles, allowedRoles);
   }
 }
